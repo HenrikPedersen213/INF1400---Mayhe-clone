@@ -77,4 +77,92 @@ class Spaceship(pygame.sprite.Sprite):
             return mapping[name]
         return getattr(pygame, "K_" + name, pygame.K_SPACE)
 
-    
+    def update(self, dt, bullet_group, all_sprites):
+        """
+        Update physics, handle input, and fire bullets.
+
+        Args:
+            dt (float): Delta-time in seconds (for frame-rate independence).
+            bullet_group (pygame.sprite.Group): Group to add new bullets into.
+            all_sprites (pygame.sprite.Group): Master group for new sprites.
+        """
+        if not self.alive:
+            return
+
+        keys = pygame.key.get_pressed()
+
+        # Rotation
+        if keys[self._key(self.controls["left"])]:
+            self.angle -= config.ROTATION_SPEED
+        if keys[self._key(self.controls["right"])]:
+            self.angle += config.ROTATION_SPEED
+
+        # Thrust
+        thrusting = keys[self._key(self.controls["thrust"])] and self.fuel > 0
+        if thrusting:
+            rad = math.radians(self.angle)
+            thrust_vec = pygame.math.Vector2(math.sin(rad), -math.cos(rad))
+            self.vel += thrust_vec * config.THRUST_POWER
+            self.fuel -= config.FUEL_BURN_RATE
+
+        # Gravity
+        self.vel.y += config.GRAVITY
+
+        # Speed cap
+        if self.vel.length() > config.MAX_SPEED:
+            self.vel.scale_to_length(config.MAX_SPEED)
+
+        # Position (Euler integration)
+        self.pos += self.vel
+
+        # Screen wrapping
+        self.pos.x %= config.SCREEN_WIDTH
+        self.pos.y %= config.SCREEN_HEIGHT
+
+        # Fire
+        if keys[self._key(self.controls["fire"])]:
+            self._try_fire(bullet_group, all_sprites)
+
+        self._rotate_image()
+
+    def _try_fire(self, bullet_group, all_sprites):
+        """
+        Spawn a bullet if cooldown has expired and bullet limit allows.
+
+        """
+        from bullet import Bullet  # local import avoids circular dependency
+
+        own = [b for b in bullet_group if b.owner == self.player_id]
+        if len(own) >= config.MAX_BULLETS:
+            return
+
+        now = pygame.time.get_ticks()
+        last = Spaceship._fire_cooldown.get(self.player_id, 0)
+        if now - last < 300:
+            return
+        Spaceship._fire_cooldown[self.player_id] = now
+
+        rad = math.radians(self.angle)
+        direction = pygame.math.Vector2(math.sin(rad), -math.cos(rad))
+        spawn = self.pos + direction * 18
+        bullet = Bullet(spawn, direction, self.player_id)
+        bullet_group.add(bullet)
+        all_sprites.add(bullet)
+
+    def crash(self):
+        """Handle a crash: deduct score and respawn the ship."""
+        self.score = max(0, self.score - config.SCORE_CRASH_PENALTY)
+        self._respawn()
+
+    def _respawn(self):
+        """Reset position, velocity, and fuel to starting values."""
+        start_positions = {1: (200, 100), 2: (600, 100)}
+        x, y = start_positions.get(self.player_id, (400, 100))
+        self.pos = pygame.math.Vector2(x, y)
+        self.vel = pygame.math.Vector2(0, 0)
+        self.angle = 0.0
+        self.fuel = config.STARTING_FUEL
+
+    def refuel(self):
+        """Add fuel when the ship is resting on a landing pad."""
+        self.fuel = min(config.STARTING_FUEL, self.fuel + config.REFUEL_RATE)
