@@ -106,8 +106,8 @@ class Game:
         self.obstacles.add(roof)
         self.all_sprites.add(roof)
 
-        pad1 = LandingPad(config.SCREEN_WIDTH/4*0.8,  config.SCREEN_HEIGHT - 30)
-        pad2 = LandingPad(config.SCREEN_WIDTH/4*3, config.SCREEN_HEIGHT - 30)
+        pad1 = LandingPad(config.SCREEN_WIDTH/4*0.8,  config.SCREEN_HEIGHT-400,50,50)
+        pad2 = LandingPad(config.SCREEN_WIDTH/4*3, config.SCREEN_HEIGHT-400,50,50)
         for pad in (pad1, pad2):
             self.landing_pads.add(pad)
             self.all_sprites.add(pad)
@@ -166,7 +166,7 @@ class Game:
         # Ships hit obstacles
         for ship in self.ships:
             if pygame.sprite.spritecollideany(ship, self.obstacles):
-                if ship.vel.length() > 1.5:
+                if ship.vel.length() > 0.1:
                     ship.crash()
                 else:
                     ship.vel.y = 0
@@ -175,8 +175,7 @@ class Game:
         # Ships on landing pads — refuel
         for ship in self.ships:
             if pygame.sprite.spritecollideany(ship, self.landing_pads):
-                if ship.vel.length() < 1.5:
-                    ship.refuel()
+                ship.refuel()
 
         # Ships collide with each other
         if pygame.sprite.collide_rect(self.ship1, self.ship2):

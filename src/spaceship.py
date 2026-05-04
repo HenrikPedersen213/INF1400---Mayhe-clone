@@ -146,7 +146,7 @@ class Spaceship(pygame.sprite.Sprite):
 
         rad = math.radians(self.angle)
         direction = pygame.math.Vector2(math.sin(rad), -math.cos(rad))
-        spawn = self.pos + direction * 18
+        spawn = self.pos + direction * 35
         bullet = Bullet(spawn, direction, self.player_id)
         bullet_group.add(bullet)
         all_sprites.add(bullet)
