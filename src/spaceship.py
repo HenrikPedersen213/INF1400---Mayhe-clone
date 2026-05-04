@@ -105,8 +105,10 @@ class Spaceship(pygame.sprite.Sprite):
             self.vel += thrust_vec * config.THRUST_POWER
             self.fuel -= config.FUEL_BURN_RATE
 
-        # Gravity
-        self.vel.y += config.GRAVITY
+        # Space like movement with air ressistance
+        # Yeah... make it make sense
+        self.vel = self.vel * config.GRAVITY
+
 
         # Speed cap
         if self.vel.length() > config.MAX_SPEED:
@@ -156,7 +158,7 @@ class Spaceship(pygame.sprite.Sprite):
 
     def _respawn(self):
         """Reset position, velocity, and fuel to starting values."""
-        start_positions = {1: (200, 100), 2: (600, 100)}
+        start_positions = {1: (config.SCREEN_WIDTH/4, 100), 2: ((config.SCREEN_WIDTH/4)*3, 100)}
         x, y = start_positions.get(self.player_id, (400, 100))
         self.pos = pygame.math.Vector2(x, y)
         self.vel = pygame.math.Vector2(0, 0)

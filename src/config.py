@@ -11,7 +11,7 @@ FPS = 60
 TITLE = "Mayhem Clone"
 
 # Physics
-GRAVITY = 0.02          # pixels/frame^2 downward acceleration
+GRAVITY = 0.99          # pixels/frame^2 downward acceleration
 THRUST_POWER = 0.12     # acceleration added when thrusting
 ROTATION_SPEED = 3.0    # degrees per frame
 MAX_SPEED = 8.0         # maximum velocity magnitude
@@ -41,10 +41,10 @@ GREY = (100, 100, 110)
 DARK_GREY = (30, 30, 35)
 
 # Player 1 controls  (arrow keys)
-P1_LEFT  = "left"
-P1_RIGHT = "right"
-P1_THRUST = "up"
-P1_FIRE  = "rctrl"   # right ctrl — change to taste
+P1_LEFT  = "j"
+P1_RIGHT = "l"
+P1_THRUST = "i"
+P1_FIRE  = "n"   # right ctrl — change to taste
 
 # Player 2 controls  (WASD + space)
 P2_LEFT  = "a"

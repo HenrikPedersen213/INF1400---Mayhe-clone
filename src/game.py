@@ -79,25 +79,35 @@ class Game:
 
     def _setup_world(self):
         """Create and register all sprites for the initial game world."""
-        p1_controls = {"left": "left", "right": "right", "thrust": "up",  "fire": "rctrl"}
-        p2_controls = {"left": "a",    "right": "d",     "thrust": "w",   "fire": "space"}
+        p1_controls = {"left": config.P1_LEFT, "right": config.P1_RIGHT, "thrust": config.P1_THRUST,  "fire": config.P1_FIRE}
+        p2_controls = {"left": config.P2_LEFT,    "right": config.P2_RIGHT,     "thrust": config.P2_THRUST,   "fire": config.P2_FIRE}
 
-        self.ship1 = Spaceship(200, 100, config.BLUE, p1_controls, 1)
-        self.ship2 = Spaceship(600, 100, config.RED,  p2_controls, 2)
+        self.ship1 = Spaceship(config.SCREEN_WIDTH/4, 100, config.BLUE, p1_controls, 1)
+        self.ship2 = Spaceship((config.SCREEN_WIDTH/4)*3, 100, config.RED,  p2_controls, 2)
         for ship in (self.ship1, self.ship2):
             self.ships.add(ship)
             self.all_sprites.add(ship)
 
-        obs = Obstacle(300, 250, 200, 30)
-        self.obstacles.add(obs)
-        self.all_sprites.add(obs)
+        for i in range(0,5):
+            obs = Obstacle(200*2.3*i, 250*i, 100, 300)
+            self.obstacles.add(obs)
+            self.all_sprites.add(obs)
+        
+        for i in range(0,5):
+            obs = Obstacle((200*2.3*i), 700- 250*i, 100, 300)
+            self.obstacles.add(obs)
+            self.all_sprites.add(obs)
 
         floor = Obstacle(0, config.SCREEN_HEIGHT - 20, config.SCREEN_WIDTH, 20, config.GREY)
         self.obstacles.add(floor)
         self.all_sprites.add(floor)
+        
+        roof = Obstacle(0, 0, config.SCREEN_WIDTH, 20, config.GREY)
+        self.obstacles.add(roof)
+        self.all_sprites.add(roof)
 
-        pad1 = LandingPad(80,  config.SCREEN_HEIGHT - 30)
-        pad2 = LandingPad(640, config.SCREEN_HEIGHT - 30)
+        pad1 = LandingPad(config.SCREEN_WIDTH/4*0.8,  config.SCREEN_HEIGHT - 30)
+        pad2 = LandingPad(config.SCREEN_WIDTH/4*3, config.SCREEN_HEIGHT - 30)
         for pad in (pad1, pad2):
             self.landing_pads.add(pad)
             self.all_sprites.add(pad)
@@ -110,7 +120,6 @@ class Game:
         """
         while self.running:
             dt = self.clock.tick(config.FPS) / 1000.0  # seconds
-
             self._handle_events()
             self._update(dt)
             self._check_collisions()
@@ -132,15 +141,12 @@ class Game:
         """
         Update all sprites for one frame.
 
-        Args:
-            dt (float): Delta-time in seconds.
         """
         for ship in self.ships:
             ship.update(dt, self.bullets, self.all_sprites)
 
         self.bullets.update()
-        self.obstacles.update()
-        self.landing_pads.update()
+      
 
 
     def _check_collisions(self):
