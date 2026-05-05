@@ -1,0 +1,10 @@
+{
+    "python.defaultInterpreterPath": "/home/henri/miniforge3/bin/python3",
+    "python.languageServer": "Pylance",
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.indexing": true,
+    "python.analysis.extraPaths": ["/home/henri/miniforge3/lib/python3.12/site-packages"],
+    "pylint.path": ["/home/henri/miniforge3/bin/pylint"],
+    "pylint.interpreter": ["/home/henri/miniforge3/bin/python3"]
+}

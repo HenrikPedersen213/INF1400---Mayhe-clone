@@ -166,7 +166,7 @@ class Game:
         # Ships hit obstacles
         for ship in self.ships:
             if pygame.sprite.spritecollideany(ship, self.obstacles):
-                if ship.vel.length() > 0.1:
+                if ship.vel.length() > 1.5:
                     ship.crash()
                 else:
                     ship.vel.y = 0
