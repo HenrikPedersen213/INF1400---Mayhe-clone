@@ -107,7 +107,10 @@ class Spaceship(pygame.sprite.Sprite):
 
         # Space like movement with air ressistance
         # Yeah... make it make sense
-        self.vel = self.vel * config.GRAVITY
+        if config.HARDMODE == 1:
+            self.vel.y += config.GRAVITY
+        else:
+            self.vel = self.vel * (0.99)
 
 
         # Speed cap

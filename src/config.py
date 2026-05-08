@@ -4,6 +4,10 @@ Configuration constants for the Mayhem Clone game.
 All global settings are defined here. Adjust these to tune gameplay.
 """
 
+#HARDMODE FOR REALLY SERIOUS GAMERS
+#Set 0 for more fun experience
+HARDMODE = 1
+
 # Screen
 SCREEN_WIDTH = 1600
 SCREEN_HEIGHT = 900
@@ -11,7 +15,7 @@ FPS = 60
 TITLE = "Mayhem Clone"
 
 # Physics
-GRAVITY = 0.99          # pixels/frame^2 downward acceleration
+GRAVITY = 0.02          # pixels/frame^2 downward acceleration
 THRUST_POWER = 0.12     # acceleration added when thrusting
 ROTATION_SPEED = 3.0    # degrees per frame
 MAX_SPEED = 8.0         # maximum velocity magnitude
